@@ -109,5 +109,19 @@ BuildParameters.Tasks.DotNetCorePackTask
     });
 });
 
+Task("Init-Integration-Tests")
+    //.IsDependentOn("Package")
+    .Does(() =>
+{
+    NuGetInstall(new[] { "Cake.Scripting.Abstractions", "Cake.Scripting.Transport" }, new NuGetInstallSettings {
+        ExcludeVersion  = true,
+        Prerelease = true,
+        NoCache = true,
+        OutputDirectory = "./tests/integration/packages",
+        Source = new[] { MakeAbsolute(BuildParameters.Paths.Directories.NuGetPackages).FullPath },
+        FallbackSource = new[] { "https://api.nuget.org/v3/index.json" }
+    });
+});
+
 
 Build.RunDotNetCore();
